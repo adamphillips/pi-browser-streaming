@@ -121,10 +121,10 @@ class RobotController:
         #gopigo.fwd()
         if joystickX > .5:
 			print "Left"
-			gopigo.left()
+			gopigo.right()
         elif joystickX <-.5:
 			print "Right"
-			gopigo.right()
+			gopigo.left()
         elif joystickY > .5:
 			print "Fwd"
 			gopigo.fwd()
