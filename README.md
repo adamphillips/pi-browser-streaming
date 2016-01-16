@@ -1,54 +1,55 @@
-## Browser streaming bot
-### This example is for streaming video and controlling the GoPiGo from a web browser
+# Browser Streaming Bot
 
+This is my own customised version of the browser streaming bot scripts that
+come with a GoPiGo which is in turn based on various other people's hard work.
 
-![Mobile control of the GoPiGo Raspberry Pi Robot](https://raw.githubusercontent.com/DexterInd/GoPiGo/master/Software/Python/Examples/Browser_Streaming_Robot/Raspberry_Pi_Camera_controlled-by-mobile-browser.jpg "Control of the GoPiGo Raspberry Pi Robot with a mobile phone.")
+I have just hacked it about to suit my own nefarious purposes.
 
-![Robot Control and streaming through the browser](https://raw.githubusercontent.com/DexterInd/GoPiGo/master/Software/Python/Examples/Browser_Streaming_Robot/Raspberry_Pi_Camera_streaming-to-computer-browser.jpg "Streaming video through the browser of the GoPiGo")
+The original README is still available at
+[README.original.md](README.original.md) which contains links to the folks who
+should be credited with the heavy lifting.
 
-![Controlling the GoPiGo robot with a mobile phone](https://raw.githubusercontent.com/DexterInd/GoPiGo/master/Software/Python/Examples/Browser_Streaming_Robot/Raspberry_Pi_Camera_controlled-by-mobile-browser.jpg "Streaming video from your Raspberry Pi Robot to your mobile phone.")
+## Setup
 
-**Usage:**
-- Make robot_web_server.py executable
+Clone the repository on to the PI
 
- >      chmod +x robot_web_server.py
+```
+https://github.com/adamphillips/pi-browser-streaming
+cd pi-browser-streaming
+```
 
-- Run robot_web_server.py
-- Open a web browser on any computer or mobile device and enter the following in the address bar:
+Ensure that the web server script is executable
 
- >      dex.local:98
-The page runs on dex.local or the IP address of the Pi on port 98
+```
+chmod +x robot_web_server.py
+```
 
-- The video stream would load up and you can use the joystick on the screen to control the GoPiGo
+Run the script (currently needs sudo)
 
+```
+sudo ./robot_web_server.py
+```
 
+Visit the control page in a browser. This runs on port 98 and the host is the
+name of your Raspberry PI. By default, Raspbian for Robots uses a host name of
+dex. So on your controlling computer or phone visit
 
-![ GoPiGo ](https://raw.githubusercontent.com/DexterInd/GoPiGo/master/GoPiGo_Chassis-300.jpg)
+```
+http://dex:98
+```
 
-This repository contains source code, firmware and design materials for the GoPiGo.
+More info on setting up is available at [the Dexter Industries project
+page](http://www.dexterindustries.com/GoPiGo/projects/python-examples-for-the-raspberry-pi/raspberry-pi-browser-streaming-robot/)
 
-![ GoPiGo ](https://raw.githubusercontent.com/DexterInd/GoPiGo/master/GoPiGo_Front_Facing_Camera300.jpg)
+## Important note about the camera
 
-# See Also
+Due to wiring constraints I have mounted my camera upside down on the chassis.
+Therefore in order for the bot to be usable, I have rotated the image by 180
+degrees and inverted the left and right controls.
 
-- [Dexter Industries] (http://www.dexterindustries.com/GoPiGo)
-- [Kickstarter Campaign] (http://kck.st/Q6vVOP)
-- [Raspberry Pi] (http://www.raspberrypi.org/)
-
-
-## License
-GoPiGo for the Raspberry Pi: an open source robotics platform for the Raspberry Pi.
-Copyright (C) 2015  Dexter Industries
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+[This is the
+commit](https://github.com/adamphillips/pi-browser-streaming/commit/88b56e9da7b5b627a6c1180feef233fadad25b03)
+where I inverted the robot controls. The image rotation is performed in the
+`#camera` section of www/layout.css . Look for the vendor specific
+`-transform:rotate(180deg)` entries (there are 3) and remove them if you want
+to put it back.
