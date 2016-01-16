@@ -1,3 +1,8 @@
+body {
+  padding: 0px;
+  background-color: #181818;
+}
+
 .joystick {
   position: relative;
   width: 230px;
@@ -14,15 +19,15 @@
   -webkit-border-radius: 100%;
   -moz-border-radius: 100%;
   border-radius: 100%; 
-  background-color: #ccc;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .joystick .handle {
   position: absolute;
   width: 24px;
   height: 24px;
-  background-color: rgb(201, 44, 44);
-  border: 1px solid rgb(107, 35, 35);
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid black;
   border-radius: 5px;
 }
 
@@ -30,16 +35,33 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 640px;
+  width: 100%;
   -webkit-transform:rotate(180deg);
   -moz-transform: rotate(180deg);
   -o-transform:rotate(180deg);
+  margin-top: 30px;
+  max-height: 100%;
+}
+
+
+@media screen and (min-width: 660px) {
+  #camera {
+    margin-top: 0;
+  }
+}
+
+@media screen and (min-width: 920px) {
+  #camera {
+    width: 920px;
+    height: 100%;
+    margin: 0px auto;
+  }
 }
 
 #motor_stick {
-  position: fixed;
-  top: 200px;
-  left: -30px;
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
 }
 
 #pan_tilt_stick {
@@ -48,3 +70,33 @@
   left: 400px;
 }
 
+#lblHost {
+  position: absolute;
+  top: 0px;
+  width: 100px;
+  margin-left: -50px;
+  left: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-image: none;
+  text-shadow: none;
+  color: white;
+  border: none;
+  border-radius: 0;
+  text-align: center;
+  font-size: 13px;
+  padding: 3px;
+  border-radius: 0px 0px 5px 5px;
+}
+
+#btnShutdown {
+  position: absolute;
+  top: 0px;
+  width: 100px;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-image: none;
+  text-shadow: none;
+  color: #d0d0d0;
+  border: none;
+  border-radius: 0px 0px 0px 5px;
+}
