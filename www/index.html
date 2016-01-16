@@ -47,36 +47,41 @@
       } ();
 
       $(document).ready(function() {
-        socket = new SockJS(config.webSocketURL);
+        var socket = new SockJS(config.webSocketURL);
+
+        var sendMessage = function(message) {
+          if (socket.readyState == SockJS.OPEN) {
+            socket.send(message);
+          }
+        };
+
+        var sendMessageWithPosition = function(message, position) {
+          sendMessage(message + ' ' + position.x + ' ' + position.y);
+        };
+
+        var sendMoveMessage = function(position) {
+          sendMessageWithPosition('Move', position);
+        };
+
+        var sendPanTiltMessage = function(position) {
+          sendMessageWithPosition('PanTilt', position);
+        };
 
         var shutdownComplete = false;
 
-        $("#camera").attr( "src", config.cameraURL );
+        $("#camera").attr("src", config.cameraURL);
 
         $("#lblHost").text(config.hostname);
 
         $('#motor_stick').joystick({
           xSnap: true,
           ySnap: true,
-          moveEvent: function(pos) {
-            if ( socket.readyState == SockJS.OPEN ) {
-              socket.send( "Move " + pos.x + " " + pos.y );
-            }
-          },
-
-          endEvent: function(pos) {
-            if ( socket.readyState == SockJS.OPEN ) {
-              socket.send( "Move " + pos.x + " " + pos.y );
-            }
-          },
-
+          moveEvent: sendMoveMessage,
+          endEvent: sendMoveMessage,
           updateIntervalMS: 500,
           updateEvent: function(pos) {
-            if (
-              socket.readyState == SockJS.OPEN
-              && ( 0.0 != pos.x || 0.0 != pos.y )
-            ) {
-              socket.send( "Move " + pos.x + " " + pos.y );
+            if (0.0 != pos.x || 0.0 != pos.y) {
+              sendMoveMessage(pos)
             }
           }
         });
@@ -84,34 +89,17 @@
         $('#pan_tilt_stick').joystick({
           xSnap: true,
           ySnap: true,
-          moveEvent: function(pos) {
-            if ( socket.readyState == SockJS.OPEN ) {
-              socket.send( "PanTilt " + pos.x + " " + pos.y );
-            }
-          },
-
-          endEvent: function(pos) {
-            if ( socket.readyState == SockJS.OPEN ) {
-              socket.send( "PanTilt " + pos.x + " " + pos.y );
-            }
-          },
-
+          moveEvent: sendPanTiltMessage,
+          endEvent: sendPanTiltMessage,
           clickEvent: function(clickPos) {
-            if (
-              socket.readyState == SockJS.OPEN
-              && Math.abs( clickPos.x ) < 0.3 && Math.abs( clickPos.y ) < 0.3
-            ) {
-              socket.send( "Centre" );
+            if (Math.abs( clickPos.x ) < 0.3 && Math.abs( clickPos.y ) < 0.3) {
+              sendMessage('Centre')
             }
           },
-
           updateIntervalMS: 500,
           updateEvent: function(pos) {
-            if (
-              socket.readyState == SockJS.OPEN
-              && ( 0.0 != pos.x || 0.0 != pos.y )
-            ) {
-              socket.send( "PanTilt " + pos.x + " " + pos.y );
+            if (0.0 != pos.x || 0.0 != pos.y) {
+              sendPanTiltMessage(pos)
             }
           }
         });
@@ -122,9 +110,7 @@
         $( "#btnShutdown" ).click( function() {
           var SHUTDOWN_TIME_MS = 25000;
 
-          if ( socket.readyState == SockJS.OPEN ) {
-              socket.send( "Shutdown" );
-          }
+          sendMessage('Shutdown')
 
           $( "#shutdownProgress" ).removeAttr('style');
           $( "#shutdownText" ).text( "Shutting Down" );
@@ -146,7 +132,7 @@
         // Add a periodic function to keep the camera and socket alive
         setInterval( function() {
           if ( socket.readyState == SockJS.OPEN ) {
-            socket.send( "StartStreaming" );
+            sendMessage('StartStreaming');
             $("#camera").attr( "src", config.cameraURL );
 
             if ( shutdownComplete ) {
