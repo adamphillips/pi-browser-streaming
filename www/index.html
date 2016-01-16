@@ -28,14 +28,30 @@
           setTimeout( layoutControls, 300 ); }
       );
 
+      // Dynamically sets a config variable
+      // Note that this function is run immediately
+      var config = function() {
+        var config = {
+          host: window.location.hostname,
+          port: window.location.port,
+          cameraPort: '8080',
+          protocol: 'http'
+        }
+
+        var urlBase = config.protocol + '://' + config.host
+
+        config.webSocketURL = urlBase + ':' + config.port + '/robot_control';
+        config.cameraURL = urlBase + ':' + config.cameraPort + '/?action=stream';
+
+        return config;
+      } ();
+
       $(document).ready(function() {
-        webSocketURL = "http://" + window.location.hostname + ":98/robot_control";
-        cameraURL = "http://" + window.location.hostname + ":8080/?action=stream";
-        socket = new SockJS(webSocketURL);
+        socket = new SockJS(config.webSocketURL);
 
         var shutdownComplete = false;
 
-        $("#camera").attr( "src", cameraURL );
+        $("#camera").attr( "src", config.cameraURL );
 
         $("#lblHost").text(window.location.hostname);
 
@@ -131,14 +147,14 @@
         setInterval( function() {
           if ( socket.readyState == SockJS.OPEN ) {
             socket.send( "StartStreaming" );
-            $("#camera").attr( "src", cameraURL );
+            $("#camera").attr( "src", config.cameraURL );
 
             if ( shutdownComplete ) {
               $( "#modalShutdownDialog" ).removeAttr('style');    // Reset the shutdown dialog by removing the style attribute added by jQuery
               shutdownComplete = false;
             }
           } else {
-            socket = new SockJS( webSocketURL );
+            socket = new SockJS( config.webSocketURL );
           }
         }, 1000 );
 
